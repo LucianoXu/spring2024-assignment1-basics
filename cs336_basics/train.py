@@ -157,6 +157,7 @@ def train(
         batch_size: int = 8,
         save_interval: int = 10000,
         max_grad_l2norm: Optional[float] = None,
+        proc_token_limit: Optional[int] = None,
         device = 'cpu'
         ):
     
@@ -196,7 +197,12 @@ def train(
             optimizer.zero_grad()
             
             # set the learning rate
-            lr = cosine_schedule(t, lr_min, lr_max, T_w, T_c)
+            lr = cosine_schedule(t, 
+                alpha_max = lr_max,
+                alpha_min = lr_min, 
+                T_w = T_w, 
+                T_c = T_c)
+            
             for p in optimizer.param_groups:
                 p['lr'] = lr
 
@@ -213,7 +219,7 @@ def train(
             optimizer.step()
 
 
-            print(f"Step {t}\ttokens: {t * context_length * batch_size:,}\tlr: {lr:.7f}\tloss: {loss.item():.3f}")
+            print(f"{ckpt_folder}\tStep {t}\ttokens: {t * context_length * batch_size:,}\tlr: {lr:.7f}\tloss: {loss.item():.3f}")
 
             log_loss = {
                 'train': loss.item()
@@ -247,8 +253,8 @@ def train(
             writer.add_scalars('loss(token)', log_loss, t * context_length * batch_size)
             writer.flush()
 
-            if t * context_length * batch_size > 400_000_000:
-                break
+            if proc_token_limit is not None and t * context_length * batch_size > proc_token_limit:
+                raise KeyboardInterrupt()
 
             t += 1
     

@@ -35,13 +35,13 @@ def gen_test(
 
 if __name__ == "__main__":
     print(gen_test(
-        "Once upon a time, there was a girl called Alice who lived in a small house in the wood.",
+        "Alice used to have a cat.",
         max_len=256,
-        T = 0.1,
+        T = 0.3,
         p_threshold=0.95,
 
-        model_ckpt = './tinystories/V1/190000.pth',
+        model_ckpt = './tinystories/V3/80001.pth',
         tokenizer_file = 'tinystories_tok.json',
 
-        device = 'cpu'
+        device = 'cuda'
     ))
