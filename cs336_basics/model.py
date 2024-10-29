@@ -171,7 +171,7 @@ class TransformerLM(nn.Module):
 from .BPETok import BPETok
 from tqdm import tqdm
     
-def decode(model: TransformerLM, tokenizer: BPETok, 
+def decode(model: torch.nn.Module, tokenizer: BPETok, 
            prompt: str,
            max_len: int,
            T: float = 0.6,

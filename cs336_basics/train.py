@@ -1,5 +1,5 @@
 
-from typing import Iterable, Optional, Callable
+from typing import Iterable, Optional, Callable, Type
 import torch
 from torch.optim import Optimizer
 
@@ -158,12 +158,15 @@ def train(
         save_interval: int = 10000,
         max_grad_l2norm: Optional[float] = None,
         proc_token_limit: Optional[int] = None,
-        device = 'cpu'
+        device = 'cpu',
+
+        # other setting
+        model_type: Type[torch.nn.Module] = TransformerLM
         ):
     
     ckpt_folder_path = pathlib.Path(ckpt_folder)
     
-    model = TransformerLM(
+    model = model_type(
         vocab_size,
         context_length,
         num_layers,
