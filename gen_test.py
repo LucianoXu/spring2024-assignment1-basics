@@ -18,9 +18,10 @@ def gen_test(
     num_heads = 16,
     d_ff = 2048,
     device = 'mps',
+    model_type: Type[torch.nn.Module] = TransformerLM
     ) -> str:
 
-    model = TransformerLM(vocab_size, context_length, num_layers, dim, num_heads, d_ff).to(device)
+    model = model_type(vocab_size, context_length, num_layers, dim, num_heads, d_ff).to(device)
     tokenizer = BPETok.from_local(tokenizer_file)
     
     obj = torch.load(model_ckpt, weights_only=True)
@@ -35,13 +36,14 @@ def gen_test(
 
 if __name__ == "__main__":
     print(gen_test(
-        "Alice used to have a cat.",
+        "Lily and Tom were twins who liked to decorate things.",
         max_len=256,
-        T = 0.3,
+        T = 0.6,
         p_threshold=0.95,
 
-        model_ckpt = './tinystories/V3/80001.pth',
+        model_ckpt = './tinystories/SELF1/40001.pth',
         tokenizer_file = 'tinystories_tok.json',
 
-        device = 'cuda'
+        device = 'cuda',
+        model_type = SelfTransformer
     ))

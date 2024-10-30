@@ -402,5 +402,43 @@ def trainPL1():
     model_type = TransformerLM_ParallelLayers
     )
 
+
+# varying batch size # current best
+def trainSELF1():
+    train(
+    enc_input_path = 'tinystories_train_encoded.npy',
+    ckpt_folder = './tinystories/SELF1',
+
+    # model
+    vocab_size = 10000,
+    context_length = 256,
+    num_layers = 4,
+    dim = 512,
+    num_heads = 16,
+    d_ff = 2048,
+    attn_pdrop = None, 
+    residual_pdrop = None,
+
+    # optimizer
+    lr_min = 6e-4, 
+    lr_max = 4e-3,
+    T_w = 2500,
+    T_c = 37500,
+    weight_decay = 0.01, 
+    betas = (0.9, 0.98), 
+    eps = 1e-8,
+    
+    # training setting:
+    load_ckpt = None,
+    valid_enc_input = 'tinystories_valid_encoded.npy',
+    valid_interval = 1000,
+    batch_size = 32,
+    save_interval = 100000,
+    max_grad_l2norm = None,
+    proc_token_limit=327_680_000,
+    device = 'cuda',
+    model_type = SelfTransformer
+    )
+
 if __name__ == "__main__":
-    trainPL1()
+    trainSELF1()

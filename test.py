@@ -1,9 +1,11 @@
-from cs336_basics import *
+from datasets import load_dataset
+from tqdm import tqdm
 
-t = 80000
-amin = 4e-5
-amax = 2e-4
-T_w = 20000
-T_c = 100000
+dataset = load_dataset("if001/oscar_2023_filtered")['train']
+dataset = dataset.select(range(len(dataset) // 5))
+text_column = "text"
+output_file = "oscar_train_tok.txt"
 
-print(cosine_schedule(t, amax, amin,))
+with open(output_file, "w") as f:
+    for sample in tqdm(dataset[text_column]):
+        f.write(sample + "<|endoftext|>")
